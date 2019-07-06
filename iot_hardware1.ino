@@ -7,18 +7,21 @@ String apartment = "2";
 String sensor = "142";
 
 // informacoes de conexao
-String host     	= "iot-pavi.herokuapp.com";	// adresse du serveur
-const int httpPort	= 80;						// port HTTP par défaut
+String host     	= "iot-pavi.herokuapp.com";
+const int httpPort	= 80;			
 String url			= "";
 String url1			= "/api/apartment/";
 String url2			= "/sensor/";
 String url3			= "/show";
 
+// pinos usados
 int pinLed = 13;
 int pinBuzzer = 7;
 int pinSensorPIR = 8;
-int valorSensorPIR = 0;
 int gasSensorA = A4;
+
+// variaveis de leitura
+int sensorPIRValue = 0;
 int sensorGasValue = 0;
 
 boolean flagAlarm = true;
@@ -145,7 +148,7 @@ void offAlarm() {
 
 void readGas()
 {
-  sensorGasValue = analogRead(gasSensorA);		// Read the input on analog pin 0 (named 'sensor') 
+  sensorGasValue = analogRead(gasSensorA);
   Serial.print("Valor do Sensor de Gas: ");  
   Serial.println(sensorGasValue);
   
@@ -160,13 +163,13 @@ void readMotion()
 {
   //Lendo o valor do sensor PIR. Este sensor pode assumir 2 valores
   //1 quando detecta algum movimento e 0 quando não detecta.
-  valorSensorPIR = digitalRead(pinSensorPIR);
+  sensorPIRValue = digitalRead(pinSensorPIR);
    
   Serial.print("Valor do Sensor PIR: ");  
-  Serial.println(valorSensorPIR);
+  Serial.println(sensorPIRValue);
    
   //Verificando se ocorreu detecção de movimentos
-  if (valorSensorPIR == 1 && flagAlarm) {
+  if (sensorPIRValue == 1 && flagAlarm) {
     onAlarm();
   } else {
     offAlarm();
@@ -187,7 +190,6 @@ void readLigth()
 void setup()
 {
   wifiSetup();
-  //Serial.begin(9600);
   lightSetup();
   motionSetup();
   gasSetup();
